@@ -78,6 +78,7 @@ app.use('/',userRoutes)
 app.use("/campgrounds",campgrounds)
 app.use('/campgrounds/:id/reviews',reviews)
 
+//Home Page
 app.get('/', (req, res) => {
     res.render('campgrounds/home')
 })

@@ -21,9 +21,26 @@ ImageSchema.virtual('thumbnail').get(function () {
 //* now we can access the property 'thumbnail' with 'images' obj 
 //*note: data derived from virtual methods/property are not stored on mongo database. This amazing feature temporarily stores data.
 
+const opts = { toJSON: { virtuals: true } };
+
 const CampgroundSchema = new Schema({
     title: String,
     images: [ ImageSchema ],
+    geometry: {
+        //GEO JSON Format
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            //! VVIMP note
+            //! reverse the returned array of coordinates in order to locate proper location
+            //! ret_cord = [y, x] => search_cord[x, y]
+            type: [Number],
+            required: true
+        }
+    },
     price: Number,
     description: String,
     location: String,
@@ -37,7 +54,15 @@ const CampgroundSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, opts);
+
+//For MAPBOX popup markup
+CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <strong><a href="/campgrounds/${this._id}">${this.title}</a><strong>
+    <p>${this.description.substring(0, 20)}...</p>`
 });
+
 
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
