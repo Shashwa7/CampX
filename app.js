@@ -15,6 +15,9 @@ const methodoverride = require('method-override')
 const passport = require('passport')
 const localStrategy = require('passport-local')
 const User = require("./models/user")
+const mongoSanitize = require('express-mongo-sanitize') //to prevent sql/mongo injection
+const helmet = require('helmet') //for manipulating headers
+
 // IMPORTING ROUTES
 const campgrounds = require('./routes/campgrounds')
 const reviews = require('./routes/reviews')
@@ -39,15 +42,20 @@ app.set('views',path.join(__dirname,'views'))
 app.use(express.urlencoded({ extended: true })) //for parsing req body from form
 app.use(methodoverride('_method')) // for overriding ususal form methods POST/GET with other alternatives like PUT/DELETE
 app.use(express.static(path.join(__dirname,'public'))) //to be able to access our public dir
+app.use(mongoSanitize({
+    replaceWith: '_'
+})) // prevent SQL/Mongo Injection
 
 
 //Dummy session as of now
 const sessionConfig = {
+    name:'trexsession',
     secret: 'secretCode',
     resave: false,
     saveUninitialized: true,
     cookie:{
         httpOnly: true, //prevents XSS scripting
+        // secure: true, //!uncomment this while deploying
         expires : Date.now() + 1000 * 60 * 60 * 24 * 7, //expires week from now
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
@@ -56,6 +64,62 @@ const sessionConfig = {
 //Middlewares
 app.use(session(sessionConfig))
 app.use(flash()) //for flashing mssg like alerts
+
+//HELMET: Header Maipulation
+app.use(helmet()); //this enable all middleware that comes with helmet
+//helmet() contains a 'Content restrictive policy' which will not allow our app to iteract with any endpoint outside its domain
+//? If you want to iteract with 3rd part domain you have 2 methods:
+//* M1> set helmet({contentSecurityPolicy: false})
+//* M2>Explicitly declare sites/3rd party URLs/Endpoints/ sources that our app wants to interact with 
+
+//* Using M2: all these sites are allowed to interact with our app, more like whitelisting these sites
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+];
+//This is the array that needs added to
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+    "https://cdn.jsdelivr.net",
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+const cloudinary_galler_id = 's7-dev'
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                `https://res.cloudinary.com/${cloudinary_galler_id}/`, //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com/",
+                "https://images.pexels.com/"
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+); 
+
 
 //Passport authentication configuration
 app.use(passport.initialize())
@@ -67,7 +131,7 @@ passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
 //locals/globals: used in every single template
-app.use((req, res, next) => {                         
+app.use((req, res, next) => {                          
     res.locals.currentUser = req.user
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error')

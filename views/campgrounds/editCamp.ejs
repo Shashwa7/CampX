@@ -2,7 +2,7 @@
 <% layout('layouts/boilerplate') -%>
 
 <!-- Everything below will be replaced as body in the boiler template -->
-    <div class="row">
+    <div class="row edit_form">
         <h1 class="text-center">Edit Campground</h1>
         <div class="col-6 offset-3">
             <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data"> 
@@ -51,8 +51,8 @@
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-info">Update Campground</button>
+                    <a class="btn btn-warning" href="/campgrounds/<%= campground._id%>">Cancel</a>
                 </div>
             </form>
-        <a href="/campgrounds/<%= campground._id%>">Back To Campground</a>
         </div>
     </div>

@@ -3,7 +3,12 @@
     <div class="col-6 offset-3">
         <div class="alert alert-danger" role="alert">
             <h4 class="alert-heading"><%=err.message%></h4>
-            <p><%= err.stack %></p>
+            <% if (process.env.NODE_ENV !== "production") { %>
+                <!-- 
+                    *HIDES ERROR IN PRODUCTION APP
+                    This will basically going to prevent showing full detailed error to users during production mode as it could be a potential threat to our site. -->
+                <p><%= err.stack %></p>
+            <% } %>
         </div>
     </div>
 </div>

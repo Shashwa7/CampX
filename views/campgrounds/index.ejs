@@ -3,16 +3,19 @@
 
 <!-- Everything below will be replaced as body in the boiler template -->
 
+<div class="d-flex flex-column align-items-center" >
+    <h1 class='text-light'>All Campgrounds</h1>
+    <div>
+    <a href="/campgrounds/new" class="btn btn-warning btn-lg mt-2 mb-2">Add Campground</a>
+    </div>
+</div>
+
 <!--  MAP Container -->
-<div id='cluster-map'></div>
+<div id='cluster-map' class="border border-4 border-dark rounded"></div>
 
 <!-- Rest Body -->
- <h1>All Campgrounds</h1>
-    <div>
-        <a href="/campgrounds/new">Add Campground</a>
-    </div>
-    <% for (let campground of campgrounds){%>
-    <div class="card mb-3" >
+ <% for (let campground of campgrounds){%>
+    <div class="card mb-3 mt-3" >
         <div class="row"> 
             <div class="col-md-4">
                 <%if(campground.images.length) {%>
@@ -35,7 +38,6 @@
         </div>
     </div>
  <% }%>
-
 
 <!-- Scripts for integrating cluster map -->
 <script>

@@ -1,1 +1,1 @@
-const passport = require('passport')
+name: 'session', //name of our session var
