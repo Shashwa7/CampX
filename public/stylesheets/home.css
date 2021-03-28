@@ -1,6 +1,6 @@
 body {
     height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.281), rgba(0, 0, 0, 0.253)),
+    background-image: linear-gradient(rgba(128, 0, 130, 0.544), rgba(0, 0, 0, 0.253)),
     url("https://images.pexels.com/photos/587976/pexels-photo-587976.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
     background-size: cover;
     background-position: center;
