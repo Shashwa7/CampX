@@ -17,7 +17,7 @@ body::before{
     width: 100%;
     height: 100%;
     z-index: -1;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.233), rgba(0, 0, 0, 0.5)),
+    background-image: linear-gradient(rgba(0, 0, 0, 0.582), rgba(0, 0, 0, 0.5)),
     url("https://images.unsplash.com/photo-1524494860062-9442631ee30e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1052&q=80");
     background-size:cover;
     background-repeat: no-repeat;
@@ -25,18 +25,22 @@ body::before{
     
 }
 
+label{
+    color:white
+}
+
 form{
+    
     width: 100%;
 }
 main.container{ 
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
-.login-container, .register-container, .insert_form, .edit_form, .show_camp{
+.login-container, .register-container, .insert_form, .edit_form, .show_camp{   
  padding: 1rem;
  width:100%;
- text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.63);
- box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.863);
  border-radius: .8rem;
 }
 

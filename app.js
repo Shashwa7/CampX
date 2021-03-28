@@ -66,13 +66,13 @@ app.use(session(sessionConfig))
 app.use(flash()) //for flashing mssg like alerts
 
 //HELMET: Header Maipulation
-app.use(helmet()); //this enable all middleware that comes with helmet
+app.use(helmet({contentSecurityPolicy: false})); //this enable all middleware that comes with helmet
 //helmet() contains a 'Content restrictive policy' which will not allow our app to iteract with any endpoint outside its domain
 //? If you want to iteract with 3rd part domain you have 2 methods:
 //* M1> set helmet({contentSecurityPolicy: false})
 //* M2>Explicitly declare sites/3rd party URLs/Endpoints/ sources that our app wants to interact with 
 
-//* Using M2: all these sites are allowed to interact with our app, more like whitelisting these sites
+/* Using M2: all these sites are allowed to interact with our app, more like whitelisting these sites
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
     "https://api.tiles.mapbox.com/",
@@ -119,7 +119,7 @@ app.use(
         },
     })
 ); 
-
+*/
 
 //Passport authentication configuration
 app.use(passport.initialize())
